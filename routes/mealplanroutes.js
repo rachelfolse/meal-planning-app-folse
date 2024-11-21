@@ -1,4 +1,6 @@
-const router = require('express').Router();
+const express = require('express');
+const router = express.Router();
+const { getRecipeDetails } = require('../../utils/spoonacular');
 const MealPlan = require('../../models/MealPlan');
 
 // Get all meal plans for a user
@@ -10,6 +12,35 @@ router.get('/', async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+const { getRecipeDetails } = require('../../utils/spoonacular');
+
+router.put('/:id/add-recipe/:recipeId', async (req, res) => {
+  try {
+    const recipe = await getRecipeDetails(req.params.recipeId);
+    if (!recipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+    const updatedMealPlan = await MealPlan.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          recipes: {
+            title: recipe.title,
+            ingredients: recipe.extendedIngredients.map((ing) => ing.original),
+            instructions: recipe.instructions,
+            apiId: req.params.recipeId,
+          },
+        },
+      },
+      { new: true }
+    );
+    res.json(updatedMealPlan);
+  } catch (err) {
+    res.status(500).json({ message: 'Error adding recipe to meal plan', error: err.message });
+  }
+});
+
 
 // Create a new meal plan
 router.post('/', async (req, res) => {
@@ -48,32 +79,32 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-const { getRecipeDetails } = require('../../utils/spoonacular');
-
-router.put('/:id/add-recipe/:recipeId', async (req, res) => {
-  try {
-    const recipe = await getRecipeDetails(req.params.recipeId);
-    if (!recipe) {
-      return res.status(404).json({ message: 'Recipe not found' });
+// Add a recipe to a meal plan
+router.put('/:id', async (req, res) => {
+    try {
+      const updatedMealPlan = await MealPlan.findByIdAndUpdate(
+        req.params.id,
+        { $push: { recipes: req.body.recipe } },
+        { new: true }
+      );
+      res.json(updatedMealPlan);
+    } catch (err) {
+      res.status(500).json(err);
     }
-    const updatedMealPlan = await MealPlan.findByIdAndUpdate(
-      req.params.id,
-      {
-        $push: {
-          recipes: {
-            title: recipe.title,
-            ingredients: recipe.extendedIngredients.map((ing) => ing.original),
-            instructions: recipe.instructions,
-            apiId: req.params.recipeId,
-          },
-        },
-      },
-      { new: true }
-    );
-    res.json(updatedMealPlan);
-  } catch (err) {
-    res.status(500).json({ message: 'Error adding recipe to meal plan', error: err.message });
-  }
-});
+  });
+  
+  // Remove a recipe from a meal plan
+  router.delete('/:planId/recipes/:recipeId', async (req, res) => {
+    try {
+      const updatedMealPlan = await MealPlan.findByIdAndUpdate(
+        req.params.planId,
+        { $pull: { recipes: { _id: req.params.recipeId } } },
+        { new: true }
+      );
+      res.json(updatedMealPlan);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });  
 
 module.exports = router;

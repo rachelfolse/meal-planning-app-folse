@@ -57,32 +57,4 @@
       alert('Failed to remove recipe');
     }
   }
-  // Add a recipe to a meal plan
-router.put('/:id', async (req, res) => {
-  try {
-    const updatedMealPlan = await MealPlan.findByIdAndUpdate(
-      req.params.id,
-      { $push: { recipes: req.body.recipe } },
-      { new: true }
-    );
-    res.json(updatedMealPlan);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-// Remove a recipe from a meal plan
-router.delete('/:planId/recipes/:recipeId', async (req, res) => {
-  try {
-    const updatedMealPlan = await MealPlan.findByIdAndUpdate(
-      req.params.planId,
-      { $pull: { recipes: { _id: req.params.recipeId } } },
-      { new: true }
-    );
-    res.json(updatedMealPlan);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
 </script>

@@ -1,35 +1,30 @@
-const { Schema, model, models } = require("mongoose");
-const bcrypt = require("bcrypt");
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-const UserSchema = new Schema(
-  {
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-      minLength: 5,
-      maxLength: 200,
-    },
+const UserSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+    unique: true,
   },
-  {
-    methods: {
-      checkPassword(password) {
-        return bcrypt.compare(password, this.password);
-      },
-    },
-  }
-);
+  password: {
+    type: String,
+    required: true,
+  },
+});
 
-// hashes the password before it's stored in mongo
-UserSchema.pre("save", async function (next) {
-  // the isNew check prevents mongoose from re-hashing the password when the user is updated for any reason
-  if (this.isNew)
-    this.password = await bcrypt.hash(this.password, 10);
+// Hash password before saving
+UserSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-module.exports = models.User || model("User", UserSchema);
+// Password validation
+UserSchema.methods.checkPassword = function (password) {
+  return bcrypt.compare(password, this.password);
+};
+
+const User = mongoose.model('User', UserSchema);
+module.exports = User;
+

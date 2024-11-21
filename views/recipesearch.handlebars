@@ -5,9 +5,31 @@
   <button type="submit">Search</button>
 </form>
 
+<label for="mealPlanSelect">Select a Meal Plan:</label>
+<select id="mealPlanSelect">
+  <option value="" disabled selected>Select a meal plan</option>
+</select>
+
 <ul id="recipeResults"></ul>
 
 <script>
+  // Fetch meal plans for dropdown
+  async function fetchMealPlans() {
+    const response = await fetch('/api/meal-plans');
+    if (response.ok) {
+      const mealPlans = await response.json();
+      const mealPlanSelect = document.getElementById('mealPlanSelect');
+      mealPlanSelect.innerHTML = mealPlans.map((plan) => `
+        <option value="${plan._id}">${plan.name}</option>
+      `).join('');
+    } else {
+      alert('Error fetching meal plans');
+    }
+  }
+
+  fetchMealPlans();
+
+  // Handle recipe search
   document.getElementById('recipeSearchForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     const query = document.getElementById('query').value;
@@ -20,7 +42,7 @@
         <li>
           <h3>${recipe.title}</h3>
           <img src="${recipe.image}" alt="${recipe.title}" width="100" />
-          <button onclick="viewDetails(${recipe.id})">View Details</button>
+          <button onclick="addToMealPlan('${recipe.id}')">Add to Meal Plan</button>
         </li>
       `).join('');
     } else {
@@ -28,13 +50,23 @@
     }
   });
 
-  async function viewDetails(recipeId) {
-    const response = await fetch(`/api/recipes/${recipeId}`);
+  // Add a recipe to the selected meal plan
+  async function addToMealPlan(recipeId) {
+    const mealPlanId = document.getElementById('mealPlanSelect').value;
+    if (!mealPlanId) {
+      alert('Please select a meal plan first!');
+      return;
+    }
+
+    const response = await fetch(`/api/meal-plans/${mealPlanId}/add-recipe/${recipeId}`, {
+      method: 'PUT',
+    });
+
     if (response.ok) {
-      const recipe = await response.json();
-      alert(`Details:\nTitle: ${recipe.title}\nIngredients: ${recipe.extendedIngredients.map(ing => ing.name).join(', ')}`);
+      alert('Recipe added to meal plan successfully!');
     } else {
-      alert('Error fetching recipe details');
+      alert('Error adding recipe to meal plan');
     }
   }
 </script>
+

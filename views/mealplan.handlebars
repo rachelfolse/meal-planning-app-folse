@@ -1,0 +1,30 @@
+<h1>Meal Plans</h1>
+<ul id="mealPlans"></ul>
+
+<script>
+  async function fetchMealPlans() {
+    const response = await fetch('/api/meal-plans');
+    if (response.ok) {
+      const mealPlans = await response.json();
+      const mealPlanList = document.getElementById('mealPlans');
+      mealPlanList.innerHTML = mealPlans.map((plan) => `
+        <li>
+          <h2>${plan.name}</h2>
+          <ul>
+            ${plan.recipes.map((recipe) => `
+              <li>
+                <h3>${recipe.title}</h3>
+                <p>Ingredients: ${recipe.ingredients.join(', ')}</p>
+                <p>Instructions: ${recipe.instructions}</p>
+              </li>
+            `).join('')}
+          </ul>
+        </li>
+      `).join('');
+    } else {
+      alert('Error fetching meal plans');
+    }
+  }
+
+  fetchMealPlans();
+</script>
