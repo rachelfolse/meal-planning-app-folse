@@ -1,0 +1,40 @@
+<h1>Search Recipes</h1>
+<form id="recipeSearchForm">
+  <label for="query">Search for Recipes:</label>
+  <input type="text" id="query" name="query" placeholder="e.g., pasta, chicken" required />
+  <button type="submit">Search</button>
+</form>
+
+<ul id="recipeResults"></ul>
+
+<script>
+  document.getElementById('recipeSearchForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const query = document.getElementById('query').value;
+
+    const response = await fetch(`/api/recipes/search?q=${query}`);
+    if (response.ok) {
+      const recipes = await response.json();
+      const resultsList = document.getElementById('recipeResults');
+      resultsList.innerHTML = recipes.map((recipe) => `
+        <li>
+          <h3>${recipe.title}</h3>
+          <img src="${recipe.image}" alt="${recipe.title}" width="100" />
+          <button onclick="viewDetails(${recipe.id})">View Details</button>
+        </li>
+      `).join('');
+    } else {
+      alert('Error fetching recipes');
+    }
+  });
+
+  async function viewDetails(recipeId) {
+    const response = await fetch(`/api/recipes/${recipeId}`);
+    if (response.ok) {
+      const recipe = await response.json();
+      alert(`Details:\nTitle: ${recipe.title}\nIngredients: ${recipe.extendedIngredients.map(ing => ing.name).join(', ')}`);
+    } else {
+      alert('Error fetching recipe details');
+    }
+  }
+</script>
