@@ -22,11 +22,11 @@ app.engine(
   engine({
     layoutsDir: path.join(__dirname, 'views', 'layouts'),
     partialsDir: path.join(__dirname, 'views', 'partials'),
-    viewsDir: path.join(__dirname, 'views'),
     defaultLayout: 'main',
   })
 );
 app.set('view engine', 'handlebars');
+app.set('views', path.join(__dirname, 'views'));
 
 // Serve static files (CSS, JS, images)
 app.use(express.static(path.join(__dirname, 'public')));

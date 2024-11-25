@@ -1,5 +1,5 @@
 const express = require('express');
-const Recipe = require('../models/Recipe');
+const Recipe = require('../models');
 const mongoose = require('mongoose');
 
 // Route to render homepage (if needed, you can move this to a different controller if necessary)
