@@ -1,0 +1,20 @@
+<h1>Meal Plans</h1>
+
+<a href="/mealplans/new" class="btn btn-primary">Create New Meal Plan</a>
+<link rel="stylesheet" href="/style.css">
+
+<ul>
+  {{#each mealPlans}}
+    <li>
+      <strong>{{this.name}}</strong> - {{this.description}}
+      <a href="/mealplans/{{this._id}}" class="btn btn-secondary">Show</a>
+
+      <a href="/mealplans/{{this._id}}/edit" class="btn btn-warning">Edit</a>
+
+      <form action="/mealplans/{{this._id}}?_method=DELETE" method="POST" style="display:inline;">
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    </li>
+  {{/each}}
+</ul>
+

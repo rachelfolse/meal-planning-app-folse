@@ -1,29 +1,18 @@
 const mongoose = require('mongoose');
 
-const RecipeSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  ingredients: [String],
-  instructions: String,
-  apiId: String, // Optional, if linked to an external API
-});
-
 const MealPlanSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  recipes: [RecipeSchema], // Embedding recipes as subdocuments
+  name: { type: String, required: true },
+  recipes: [{ type: String, required: true}], // References Recipe model
+  description: {type: String, required: true},
+  createdAt: { type: Date, default: Date.now },
 });
 
 const MealPlan = mongoose.model('MealPlan', MealPlanSchema);
+
 module.exports = MealPlan;
+
+
+
+
 
 

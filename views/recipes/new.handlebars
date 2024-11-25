@@ -1,0 +1,17 @@
+ <link rel="stylesheet" href="/style.css">
+
+<form action="/recipes" method="POST">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="ingredients">Ingredients:</label>
+    <textarea id="ingredients" name="ingredients" required></textarea><br>
+
+    <label for="instructions">Instructions:</label>
+    <textarea id="instructions" name="instructions" required></textarea>
+
+    <label for="prepTime">Prep Time (in minutes):</label>
+    <input type="number" id="prepTime" name="prepTime" required>
+
+    <button type="submit">Create Recipes</button>
+</form>

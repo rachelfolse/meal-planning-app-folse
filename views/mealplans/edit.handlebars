@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="/style.css">
+<h1>Edit Meal Plan</h1>
+
+<form action="/mealplans/{{mealPlan._id}}?_method=PUT" method="POST">
+  <label for="name">Name:</label>
+  <input type="text" name="name" id="name" value="{{mealPlan.name}}" required>
+  
+  <label for="recipes">Recipes:</label>
+  <input type="text" name="recipes" id="recipes" value="{{mealPlan.recipes}}" required>
+  
+  <label for="description">Description:</label>
+  <textarea name="description" id="description" required>{{mealPlan.description}}</textarea>
+  
+  <button type="submit">Update</button>
+</form>
+
+<a href="/mealplans">Back to All Meal Plans</a>

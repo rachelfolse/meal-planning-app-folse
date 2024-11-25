@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="/style.css">
+    <title>{{recipe.title}}</title>
+</head>
+<body>
+    <h1>{{recipe.title}}</h1>
+    <p><strong>Preparation Time:</strong> {{recipe.prepTime}} minutes</p>
+    <p><strong>Instructions:</strong></p>
+    <p>{{recipe.instructions}}</p>
+
+    <h3>Ingredients</h3>
+    <ul>
+        {{#each recipe.ingredients}}
+            <li>{{this}}</li>
+        {{/each}}
+    </ul>
+
+    <a href="/recipes/{{recipe._id}}/edit">Edit this Recipe</a>
+    <form action="/recipes/{{recipe._id}}/delete" method="POST" style="display:inline;">
+        <button type="submit">Delete this Recipe</button>
+    </form>
+
+    <br>
+    <a href="/recipes">Back to Recipe List</a>
+</body>
+</html>

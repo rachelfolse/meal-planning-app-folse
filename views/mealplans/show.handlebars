@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="/style.css">
+
+<h1>{{mealPlan.name}}</h1>
+
+<p>{{mealPlan.description}}</p>
+
+<h2>Recipes</h2>
+<ul>
+    <li>{{mealPlan.recipes}}</li>
+</ul>
+
+<a href="/mealplans/{{mealPlan._id}}/edit">Edit</a>
+<form action="/mealplans/{{mealPlan._id}}?_method=DELETE" method="POST">
+  <button type="submit">Delete</button>
+</form>
+<a href="/mealplans">Back to All Meal Plans</a>
