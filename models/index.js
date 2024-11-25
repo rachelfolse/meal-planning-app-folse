@@ -1,4 +1,4 @@
-const Recipe = require('../../meal-planning-app-folse/models/Recipe');
-const MealPlan = require('./mealPlan');
+const Recipe = require('./models/Recipe');
+const MealPlan = require('./models/mealPlan');
 
 module.exports = { Recipe, MealPlan };
